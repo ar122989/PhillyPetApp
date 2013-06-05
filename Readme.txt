@@ -1,6 +1,6 @@
 Philly Pet App
 
-The purpose of this web app is to help pet owners find any pet that they may have lost.  
+The purpose of this web app is to help pet owners find any pet that they may have lost.  I feel that this app could really bring communities together.  There is nothing worse than losing pet.  It is like losing a part of your family.  Before there wasn't much anyone could do beside put up posters.  With this web app the entire city could pull together to find your lost family member.
 
 There are five basic sections that make up this web app. Links to animal shelters in philadelphia, reporting a found pet, reporting a lost pet, browsing pets that have been reported found and browsing pets that have been reported lost.
 
