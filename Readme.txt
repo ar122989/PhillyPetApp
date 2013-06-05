@@ -14,6 +14,8 @@ To setup this app the server needs to have MySQL and PHP installed.  Log in to M
 
 This web app will require very little maintanence.  The only thing that needs to be done is to remove old records from the database and their associated images.  I will leave it to the discresion of the web server administrator as to how many records can be kept.
 
+You can see the app in action on a spare domain I have: http://www.gingerbreadhousechallenge.com/
+
 The only author for this web app was me! Ariel De Prada.  You can contact me with any questions at luyikao@gmail.com or on my cell phone 714-381-4517. 
 
 I truely hope that you find this app usefull and I appreciate that time you are taking to look at it.
