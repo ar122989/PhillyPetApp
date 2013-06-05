@@ -1,0 +1,324 @@
+<!DOCTYPE html> 
+<html> 
+<head> 
+	<title>Philly Pet App</title> 
+	<meta charset="utf-8" />  
+	<meta name="viewport" content="width=device-width, initial-scale=1" /> 
+	<link rel="stylesheet" href="http://code.jquery.com/mobile/1.2.1/jquery.mobile-1.2.1.min.css" />
+	<script type="text/javascript" src="http://code.jquery.com/jquery-1.8.3.min.js"></script>
+    <script type="text/javascript" src="http://code.jquery.com/mobile/1.2.1/jquery.mobile-1.2.1.min.js"></script>
+    <script type="text/javascript" src="jquery.validate.min.js"></script>
+    <script type="text/javascript" src="additional-methods.min.js"></script>
+    <script type="text/javascript">
+        $.mobile.ajaxEnabled = false;
+
+        function displayAsImage(file, containerid, $loadingMessage) {
+            if (typeof FileReader !== "undefined") {
+                var container = document.getElementById(containerid),
+                    img = document.createElement("img"),
+                    reader;
+                container.appendChild(img);
+                reader = new FileReader();
+                reader.onload = (function (theImg) {
+                    return function (evt) {
+                        theImg.src = evt.target.result;
+                    };
+                }(img));
+
+                $(img).on('load', function () {
+                    $loadingMessage.hide();
+                });
+
+                reader.onabort = function (evt) {
+                    $loadingMessage.hide();
+                };
+
+                reader.readAsDataURL(file);
+            }
+        }
+    </script>
+</head> 
+<body> 
+    <div data-role="page" id="index">
+        <div data-role="content" role="main">
+            <h1>Philly Pet App</h1>
+            <ul data-role="listview" data-inset="true">
+                <li data-theme="b"><a href="#adoptions">Philadelphia Animal Shelters</a></li>
+                <li data-theme="b"><a href="#foundAPet">Report a found pet</a></li>
+                <li data-theme="b"><a href="#lostAPet">Report a lost pet</a></li>
+                <li data-theme="b"><a href="/foundPetList.php">Browse found pets</a></li>
+                <li data-theme="b"><a href="/lostPetList.php">Browse lost pets</a></li>
+            </ul>
+        </div>
+    </div>
+    <div data-role="page" id="adoptions">
+        <div data-role="content" role="main">
+            <h1>Animal Shelters in Philadelphia</h1>
+            <ul data-role="listview" data-inset="true">
+                <li data-theme="b"><a href="http://www.phillypaws.org">PAWS</a></li>
+                <li data-theme="b"><a href="http://www.mlar.org">Main Line Animal Rescue</a></li>
+                <li data-theme="b"><a href="http://pspca.org">Pennsylvania SPCA</a></li>
+                <li data-theme="b"><a href="http://operationava.org">Operation AVA</a></li>
+                <li data-theme="b"><a href="http://www.acctphilly.org">ACCT Philly</a></li>
+            </ul>
+        </div>
+    </div>
+    <div data-role="page" id="foundAPet">
+        <script type="text/javascript">
+            $('#foundAPet').on('pageinit', function () {
+                $("#btnFPUploadPicture").click(function (e) {
+                    e.preventDefault();
+                    $("#btnHiddenFPUploadPicture input[type=file]").trigger("click");
+                    $("#fpLoadingMessage").show();
+                });
+
+                $("#btnHiddenFPUploadPicture input[type=file]").change(function () {
+                    var file = $("#btnHiddenFPUploadPicture input[type=file]")[0].files[0];
+                    $("#fpPreview").empty();
+
+                    var $loadingMessage = $("#fpLoadingMessage");
+                    displayAsImage(file, "fpPreview", $loadingMessage);
+                });
+
+                var validator = $("#foundPetForm").validate({
+                    rules: {
+                        fpType: "required",
+                        fpBreed: "required",
+                        fpColor: "required",
+                        fpLocation: "required",
+                        fpEmail: {
+                            required: true,
+                            email: true
+                        },
+                    },
+                    messages: {
+                        fpType: "Please specify the type of pet you found.",
+                        fpBreed: "Please specify the breed of the pet you found (eg: Pug, Siamese, Parrot, etc..).",
+                        fpColor: "Please specify the color of the pet you found.",
+                        fpLocation: "Please specify where you found the pet.",
+                        fpEmail: {
+                            required: "Please speficy an email address where the pet's owner can contact you.",
+                            email: "Your email address must be in the format of user@domain.com"
+                        }
+                    }
+                });
+            });
+        </script>
+        <style>
+            .imagePreview img {
+                height: 30px;
+                width: 30px;
+            }
+
+            .error {
+                color: red;
+            }
+        </style>
+        <div data-role="content" role="main">
+            <h1>Report A Found Pet</h1>
+            <form id="foundPetForm" data-ajax="false" action="storeFoundPet.php" method="post" enctype="multipart/form-data">
+                <ul data-role="listview" data-inset="true">
+                    <li data-role="fieldcontain" data-theme="b">
+                        <label for="fpType">Type of pet:</label>
+                        <select name="fpType" id="fpType">
+                            <option value="1">Dog</option>
+                            <option value="2">Cat</option>
+                            <option value="3">Bird</option>
+                            <option value="4">Other</option>
+                        </select>
+                    </li>
+                    <li data-role="fieldcontain" data-theme="b">
+                        <label for="fpBreed">Breed:</label>
+                        <input name="fpBreed" id="fpBreed" type="text" />
+                    </li>
+                    <li data-role="fieldcontain" data-theme="b">
+                        <label for="fpGender">Gender:</label>
+                         <select name="fpGender" id="fpGender">
+                            <option value="0">Male</option>
+                            <option value="1">Female</option>
+                        </select>
+                    </li>
+                    <li data-role="fieldcontain" data-theme="b">
+                        <label for="fpColor">Color:</label>
+                        <input name="fpColor" id="fpColor" type="text" />
+                    </li>
+                    <li data-role="fieldcontain" data-theme="b">
+                        <label for="fpDescription">Description:</label>
+                        <input name="fpDescription" id="fpDescription" type="text" />
+                    </li>
+                    <li data-role="fieldcontain" data-theme="b">
+                        <label for="fpLocation">Found near:</label>
+                        <input name="fpLocation" id="fpLocation" type="text" />
+                    </li>
+                    <li data-role="fieldcontain" data-theme="b">
+                        <label for="fpEmail">Email Address:</label>
+                        <input name="fpEmail" id="fpEmail" type="text" />
+                    </li>
+                    <li data-role="fieldcontain" data-theme="b">
+                        <label for="fpPhoneNumber">Phone Number:</label>
+                        <input name="fpPhoneNumber" id="fpPhoneNumber" type="text" />
+                    </li>
+                    <li data-role="fieldcontain" data-theme="b">
+                        <label for="fpComments">Comments:</label>
+                        <textarea cols="40" rows="8" name="fpComments" id="fpComments"></textarea>
+                    </li>
+                    <li data-role="fieldcontain" data-theme="b">
+                        <div id="btnFPUploadPicture" data-role="button" data-icon="plus">
+                            Upload Picture
+                        </div>
+                        <div id="btnHiddenFPUploadPicture" style="display:none">
+                            <input type="file" name="fpImageUpload" accept="image/*" />
+                        </div>
+                        <div id="fpLoadingMessage" style="display:none">
+                            Uploading Picture...
+                        </div>
+                        <div id="fpPreview" class="imagePreview">
+			            </div>
+                    </li>
+                    <li>
+                        <table style="width: 100%">
+                            <tr>
+                                <td>
+                                    <a id="fpCancel" href="#index" data-role="button" data-theme="c">Cancel</a>
+                                </td>
+                                <td>
+                                    <button data-theme="b" type="submit" >Submit</button>
+                                </td>
+                            </tr>
+                        </table>
+                    </li>
+                </ul>
+            </form>
+        </div>
+    </div>
+    <div data-role="page" id="lostAPet">
+        <script type="text/javascript">
+            $('#lostAPet').on('pageinit', function () {
+                $("#btnLPUploadPic").click(function (e) {
+                    e.preventDefault();
+                    $("#btnHiddenLPUploadPic input[type=file]").trigger("click");
+                    $("#lpLoadingMessage").show();
+                });
+
+                $("#btnHiddenLPUploadPic input[type=file]").change(function () {
+                    var file = $("#btnHiddenLPUploadPic input[type=file]")[0].files[0];
+                    $("#lpPreview").empty();
+
+                    var $loadingMessage = $("#lpLoadingMessage");
+
+                    displayAsImage(file, "lpPreview", $loadingMessage);
+                });
+
+                var validator = $("#lostPetForm").validate({
+                    rules: {
+                        lpType: "required",
+                        lpBreed: "required",
+                        lpColor: "required",
+                        lpLocation: "required",
+                        lpEmail: {
+                            required: true,
+                            email: true
+                        },
+                    },
+                    messages: {
+                        lpType: "Please specify the type of pet you found.",
+                        lpBreed: "Please specify the breed of the pet you found (eg: Pug, Siamese, Parrot, etc..).",
+                        lpColor: "Please specify the color of the pet you found.",
+                        lpLocation: "Please specify where you found the pet.",
+                        lpEmail: {
+                            required: "Please speficy an email address where the pet's owner can contact you.",
+                            email: "Your email address must be in the format of user@domain.com"
+                        }
+                    }
+                });
+            });
+        </script>
+        <style>
+            .imagePreview img {
+                height: 30px;
+                width: 30px;
+            }
+
+            .error {
+                color: red;
+            }
+        </style>
+        <div data-role="content" role="main">
+            <h1>Report A Lost Pet</h1>
+            <form id="lostPetForm" data-ajax="false" action="storeLostPet.php" method="post" enctype="multipart/form-data">
+                <ul data-role="listview" data-inset="true">
+                    <li data-role="fieldcontain" data-theme="b">
+                        <label for="lpType">Type of pet:</label>
+                        <select name="lpType" id="lpType">
+                            <option value="1">Dog</option>
+                            <option value="2">Cat</option>
+                            <option value="3">Bird</option>
+                            <option value="4">Other</option>
+                        </select>
+                    </li>
+                    <li data-role="fieldcontain" data-theme="b">
+                        <label for="lpBreed">Breed:</label>
+                        <input name="lpBreed" id="lpBreed" type="text" />
+                    </li>
+                    <li data-role="fieldcontain" data-theme="b">
+                        <label for="lpGender">Gender:</label>
+                         <select name="lpGender" id="lpGender">
+                            <option value="0">Male</option>
+                            <option value="1">Female</option>
+                        </select>
+                    </li>
+                    <li data-role="fieldcontain" data-theme="b">
+                        <label for="lpColor">Color:</label>
+                        <input name="lpColor" id="lpColor" type="text" />
+                    </li>
+                    <li data-role="fieldcontain" data-theme="b">
+                        <label for="lpDescription">Description:</label>
+                        <input name="lpDescription" id="lpDescription" type="text" />
+                    </li>
+                    <li data-role="fieldcontain" data-theme="b">
+                        <label for="lpLocation">Last seen near:</label>
+                        <input name="lpLocation" id="lpLocation" type="text" />
+                    </li>
+                    <li data-role="fieldcontain" data-theme="b">
+                        <label for="lpEmail">Email Address:</label>
+                        <input name="lpEmail" id="lpEmail" type="text" />
+                    </li>
+                    <li data-role="fieldcontain" data-theme="b">
+                        <label for="lpPhoneNumber">Phone Number:</label>
+                        <input name="lpPhoneNumber" id="lpPhoneNumber" type="text" />
+                    </li>
+                    <li data-role="fieldcontain" data-theme="b">
+                        <label for="lpComments">Comments:</label>
+                        <textarea cols="40" rows="8" name="lpComments" id="lpComments"></textarea>
+                    </li>
+                    <li data-role="fieldcontain" data-theme="b">
+                        <div id="btnLPUploadPic" data-role="button" data-icon="plus">
+                            Upload Picture
+                        </div>
+                        <div id="btnHiddenLPUploadPic" style="display:none">
+                            <input type="file" id="lpImageUpload" name="lpImageUpload" accept="image/*" />
+                        </div>
+                        <div id="lpLoadingMessage" style="display:none">
+                            Uploading Picture...
+                        </div>
+                        <div id="lpPreview" class="imagePreview">
+			            </div>
+                    </li>
+                    <li>
+                        <table style="width: 100%">
+                            <tr>
+                                <td>
+                                    <a id="lpCancel" data-role="button" href="#index" data-theme="c">Cancel</a>
+                                </td>
+                                <td>
+                                    <button id="lpSubmit" data-theme="b" type="submit" >Submit</button>
+                                </td>
+                            </tr>
+                        </table>
+                    </li>
+                </ul>
+            </form>
+        </div>
+    </div>
+</body>
+</html>

@@ -1,0 +1,22 @@
+-- Create service account
+--'i9d_J3*Jen=Id8'
+CREATE USER 'dbaccount1' IDENTIFIED BY PASSWORD '1a0414b9423dcff3';
+
+GRANT INSERT,SELECT ON *.* TO 'dbaccount1'@'localhost';
+
+CREATE TABLE IF NOT EXISTS Pets
+(
+	 Id BIGINT NOT NULL AUTO_INCREMENT
+	,Type INT NOT NULL
+	,Breed VARCHAR(50) NOT NULL
+	,Gender INT NULL
+	,Color VARCHAR(20) NOT null
+	,Description VARCHAR(200)
+	,Location VARCHAR(50) NOT NULL
+	,Email VARCHAR(100) NOT NULL
+	,PhoneNumber VARCHAR(15) NULL
+	,Comments VARCHAR(60000) NULL
+	,PictureURI VARCHAR(100) NULL
+	,Found INT NOT NULL
+	,PRIMARY KEY (Id)
+);
