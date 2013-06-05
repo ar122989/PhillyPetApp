@@ -10,7 +10,7 @@ The pages for browsing lost and found pets are simple lists of the pets with the
 
 The web app is written using PHP and jQuery Mobile 1.2.1.  The database used to store the data is MySQL.  Included in the zip file is a script that will create the necessary database objects.
 
-To setup this app the server needs to have MySQL and PHP installed.  Log in to MySQL Admin with an account that has admin priveleges and run the provided script. Then all the files (minus the sql script) need to be copied to the root web site folder.  A folder called "Images" needs to be created under the root folder.  The "Images" folder needs to have read and write permissions for the image uploading to work.
+To setup this app the server needs to have MySQL and PHP installed.  Log in to MySQL Admin with an account that has admin priveleges and run the provided script. Then all the files (minus the sql script) need to be copied to the root web site folder.  A folder called "Images" needs to be created under the root folder.  The "Images" folder needs to have read and write permissions for the image uploading to work. In each of the PHP pages (foundPetList.php, lostPetList.php, storeFoundPet.php, storeLostPet.php) has a connection string to the database server.  This will need to be changed to the databaseserver name where this web will be hosted.
 
 This web app will require very little maintanence.  The only thing that needs to be done is to remove old records from the database and their associated images.  I will leave it to the discresion of the web server administrator as to how many records can be kept.
 
