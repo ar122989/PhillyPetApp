@@ -45,7 +45,7 @@
 				});
 			</script>
 			<div data-role="content" role="main">
-				
+				<h1>Pets Reported Lost</h1>
 				<ul data-role="listview" data-inset="true">
 					<?php
 						while($row = mysql_fetch_assoc($query)) {
